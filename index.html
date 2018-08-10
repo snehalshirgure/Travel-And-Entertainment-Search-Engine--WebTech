@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>MyApp</title>
+<meta charset="utf-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwdNGyF7-wq5BVjw6UpwOmb4xq1YvqFog&libraries=places"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css">
+
+<script>
+$('#fav').on('click',
+function(){
+    if(document.getElementById('fav').innerHTML == '<i class="fa fa-star-o"></i>')
+    document.getElementById('fav').innerHTML ='<i class="fa fa-star"></i>';
+    
+    if(document.getElementById('fav').innerHTML == '<i class="fa fa-star"></i>')
+    document.getElementById('fav').innerHTML ='<i class="fa fa-star-o"></i>';
+});
+</script>
+<script src="controller.js"></script>
+    
+<style>
+    .fa-star{
+        color: yellow;
+    }
+.dropdown{
+    display: inline;
+}
+    
+
+button {
+  font: inherit;
+  cursor:pointer;
+}
+
+    
+#maphere {
+        height: 500px;
+        width: 100%;
+      }
+    
+.heading{
+        margin-left: 26%;
+        font-size: 18px;
+    }
+   
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+ .column {
+  float: left;
+    width: 25%;
+    padding: 10px;
+}
+
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+}
+
+.right-tabs .nav {
+    float: right;
+    border-bottom: 0px;
+}
+.right-tabs .nav li { float: left }
+.right-tabs .tab-content {
+    float: left;
+    border-top: 1px solid #ddd;
+    margin-top: 0px;
+}
+ 
+#back,#placename,#fav,#tweet{
+            display:block;
+            display: inline;
+        }
+</style>
+
+</head>
+   
+<body>
+    <br><br>
+<div class="container" style="width: 75%">
+<div class="well">
+    
+    <div class="heading"><b>Travel and Entertainment Search</b></div><br>
+    
+    <form class="form-horizontal" action="">
+    
+    <div class="form-group">
+    <label class="control-label col-sm-2" for="keyword" style="padding-left: 10%">Keyword<span style="color: red">*</span></label>
+    <div class="col-sm-8" style="padding-left: 10%; padding-right: 5%">          
+        <input type="text" class="form-control" id="keyword" name="keyword" onclick="removeErr1()" >
+        <div style="color: red" id="error1" ></div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+    <label class="control-label col-sm-2" for="category" style="padding-left: 10%">Category</label>
+    <div class="col-sm-6" style="padding-left: 10%; padding-right: 5%"> 
+        <select class="form-control" id="category" name="category" >
+        <option id="default">Default</option>
+        <option>Airport</option>
+        <option>Amusement Park</option>
+        <option>Aquarium</option>
+        <option>Art Gallery</option>
+        <option>Bakery</option>
+        <option>Bar</option>
+        <option>Beauty Salon</option>
+        <option>Bowling Alley</option>
+        <option>Bus Station</option>
+        <option>Cafe</option>
+        <option>Campground</option>
+        <option>Car Rental</option>
+        <option>Casino</option>
+        <option>Lodging</option>
+        <option>Movie Theater</option>
+        <option>Museum</option>
+        <option>Night Club</option>
+        <option>Park</option>
+        <option>Parking</option>
+        <option>Restaurant</option>
+        <option>Shopping Mall</option>
+        <option>Stadium</option>
+        <option>Subway station</option>
+        <option>Taxi Stand</option>
+        <option>Train station</option>
+        <option>Transit Station</option>
+        <option>Travel Agency</option>
+        <option>Zoo</option>
+    </select>
+    </div>
+    </div>
+        
+    <div class="form-group">
+    <label class="control-label col-sm-2" for="distance" style="padding-left: 10%">Distance(miles)</label>
+    <div class="col-sm-6" style="padding-left: 10%; padding-right: 5%">          
+        <input type="text" class="form-control" id="distance" name="distance" placeholder="10">
+      </div>
+    </div>
+        
+    <div class="form-group">
+    <label class="control-label col-sm-2" for="from" style="padding-left: 10%">From<span style="color: red">*</span></label>
+    <div class="col-sm-8"  style="padding-left: 10%; padding-right: 5%">          
+    <div class="radio" >
+    <label>
+        <input type="radio" name="location" checked id="location1" onclick="disableLocation()" >Current Location
+    </label>
+    </div>
+    <div class="radio disabled" >
+    <label>
+        <input type="radio" name="location" id="location2" onclick="enableLocation()" >Other. Please specify:
+    </label>
+    <div class="form-group" style="padding-left:6%">         
+    <input type="text" class="form-control" id="locationtext" name="locationtext" onclick="removeErr2()" placeholder="Enter a location"  disabled>
+    <div id="error2" style="color: red"></div>
+    </div>
+    </div>
+      
+    </div>
+    
+    </div>
+        
+    <div class="form-group">
+    <button type="button" id="submit" disabled class="btn btn-info" style="margin-left: 10%" onclick="validate()"> 
+    <span class="glyphicon glyphicon-search"></span> Search </button>
+    <button type="button" id="clear" class="btn btn-default" onclick="clearForm()">Clear </button>
+    </div>   
+
+        
+</form>
+</div>
+</div>
+
+<div class="btn-group-inline" id="btn1" style="text-align:center" >
+  <button type="button" class="btn btn-primary" onclick="getResults">Results</button>
+  <button type="button" class="btn btn-link" onclick="getFavs()">Favourites</button>
+</div>
+        
+
+        
+<div class="container" id="resultArea" >
+</div>
+    
+    <div class="container" id= "nextpage">
+<div class="btn-group-inline" style="text-align:center" >
+    <button type="button" class="btn btn-default" id="previouspagebutton" style="visibility:hidden">Previous</button>
+    <button type="button" class="btn btn-default" id="nextpagebutton"  style="visibility:hidden">Next</button>
+    </div>    
+    </div>
+    
+    
+<div id="pbar" style="visibility: hidden">    
+<br><br><br>    
+<div class="progress"><div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:50%"></div></div> 
+</div>
+    
+<div class="container" id="details" style="visibility:hidden">
+<br>
+    
+<div id="header">
+<div class="row" style="padding-bottom: :15px; margin-bottom: 10px">
+    
+<div class="col-sm-4" ><button type="button" id="back" onclick="getResults()" class="btn btn-default btn-sm" style="margin-left:10%"id="list"><span class="glyphicon glyphicon-chevron-left"></span>List</button> </div>
+<div class="col-sm-6"><b><p id="placename" style="font-size: 20px; text-align: center;"></p></b> </div>
+<div class="col-sm-2" style="text-align: center;" >
+<button type="button" class="btn btn-default btn-sm" id="fav" onclick="onfav()">
+    <i class="fa fa-star"></i>
+</button>
+    <button type="button" class="btn btn-default btn-sm" id="tweet" onclick="https://twitter.com/intent/tweet"><img src="http://cs-server.usc.edu:45678/hw/hw8/images/Twitter.png" style=
+"width:25px;height:25px;padding:0"></button>
+    </div>
+</div>
+    </div>
+<div class="right-tabs clearfix" style="width:90%">  
+<ul class="nav nav-tabs pull-right">
+    <li class="active"><a data-toggle="tab" href="#info">Info</a></li>
+    <li><a data-toggle="tab" href="#photos">Photos</a></li>
+    <li><a data-toggle="tab" href="#map">Map</a></li>
+    <li><a data-toggle="tab" href="#reviews">Reviews</a></li>
+  </ul>
+  <div class="tab-content" >
+   <br><br>
+    <div id="info" class="tab-pane fade in active">
+    </div>
+    
+    <div id="photos" class="tab-pane fade">
+     </div>
+
+    <div id="map" class="tab-pane fade">
+     <div class="container">
+     <div class="row">
+         <div class="col-md-3">From</div>
+         
+         <div class="col-md-3">To</div>
+         
+         <div class="col-md-3">Travel mode</div>
+         
+         <div class="col-md-3"></div>
+         </div>
+         <div class="row">
+       <div class="col-md-3">
+        <input type="text" class="form-control" placeholder="Your location" id="fromloc" name="fromloc"></div>
+         <div class="col-md-3"><input type="text" class="form-control" id="toloc" name="toloc" readonly></div>
+                <div class="col-md-3"> <select class="form-control" id="travelmode" name="travelmode">
+                <option default value="DRIVING">Driving</option>
+                <option value="WALKING">Walking</option>
+                <option value="BICYCLING">Bicycling</option>
+                <option value="TRANSIT">Transit</option>
+            </select></div>
+            
+            <div class="col-md-3"><button class="btn btn-info" id="getdir">Get Directions</button></div>
+             </div>
+         <br>
+         <button class="btn btn-default btn-sm" id="pegman"><img src="http://cs-server.usc.edu:45678/hw/hw8/images/Pegman.png" style="width:25px;height: 25px"></button><br>
+         <br>
+         <div id="maphere" >
+         </div>
+         <div id ="dirpanel">
+         </div>
+         
+        </div>
+    </div>
+      
+    <div id="reviews" class="tab-pane fade">
+  <div class= "container">
+ 
+<div class="dropdown">
+<button class="btn btn-secondary dropdown-toggle" id="dd1" type="button" data-toggle="dropdown">Google Reviews
+<span class="caret"></span></button>
+  <ul class="dropdown-menu" >
+      <li> <a class="dropdown-item"  onclick="ongoogle()">Google Reviews</a> </li>
+      <li> <a class="dropdown-item"  onclick="onyelp()">Yelp Reviews</a> </li>
+  </ul>
+</div>
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" id="dd2" type="button" data-toggle="dropdown">Default Order
+    <span class="caret"></span></button>
+
+  <ul class="dropdown-menu" >
+      <li><a class="dropdown-item" onclick ="ondefault()" id="ondefault">Default Order</a></li>
+      <li><a class="dropdown-item" onclick ="onhighrating()" id="onhighrating">Highest Rating</a></li>
+      <li><a class="dropdown-item" onclick ="onlowrating()" id="onlowrating">Lowest Rating</a></li>
+      <li><a class="dropdown-item" onclick ="onmostrecent()" id="onmostrecent">Most Recent</a></li>
+      <li><a class="dropdown-item" onclick ="onleastrecent()" id="onleastrecent">Least Recent</a></li>
+  </ul>
+</div>
+
+      
+<div id="reviewshere">
+</div>
+</div>
+      
+      </div>
+      
+  </div>
+    </div>  
+    
+ <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog" style="width:400px; height: 600px">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"><b>Open Hours</b></h4>
+        </div>
+        <div class="modal-body" id="modal-body" >
+         
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+    
+</div>
+
+
+    
+</body>
+
+</html>
